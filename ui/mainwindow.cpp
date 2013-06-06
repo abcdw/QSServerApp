@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
     setCentralWidget(loginWidget);
 }
 
-void MainWindow::openAuthDB()
+bool MainWindow::openAuthDB()
 {
     QSqlDatabase authDB = QSqlDatabase::addDatabase("QMYSQL", "auth");
     authDB.setHostName(authHostLine->text());
@@ -23,18 +23,21 @@ void MainWindow::openAuthDB()
     if (authDB.open()) {
         infoLabel->setText("Success!");
         emit authSuccessfullOpened();
-        return;
+        return true;
     }
     else {
         infoLabel->setText(authDB.lastError().text());
         emit authConnectionFailed();
-        return;
+        return false;
     }
 }
 
 void MainWindow::startServer()
 {
-
+    if (!openAuthDB())
+        return;
+    server = new Server();
+    server->startServer();
 }
 
 void MainWindow::initLoginWidget()
@@ -46,8 +49,8 @@ void MainWindow::initLoginWidget()
     authHostLine       = new QLineEdit(loginWidget);
     authPortLine       = new QLineEdit(loginWidget);
     authDBLine         = new QLineEdit(loginWidget);
-    loginButton        = new QPushButton("login", loginWidget);
-    saveSettingsButton = new QPushButton("save" , loginWidget);
+    startButton        = new QPushButton("start server", loginWidget);
+    saveSettingsButton = new QPushButton("save"        , loginWidget);
 
     infoLabel             = new QLabel("Fill infromation about authentication database"
                                                   , loginWidget);
@@ -71,10 +74,10 @@ void MainWindow::initLoginWidget()
     loginWidgetLayout->addWidget(authDBLabel,        5, 0);
     loginWidgetLayout->addWidget(authDBLine,         5, 1);
     loginWidgetLayout->addWidget(saveSettingsButton, 6, 0);
-    loginWidgetLayout->addWidget(loginButton,        6, 1);
+    loginWidgetLayout->addWidget(startButton,        6, 1);
 
     connect(saveSettingsButton, SIGNAL(clicked()), this, SLOT(saveSettings()));
-    connect(loginButton, SIGNAL(clicked()), this, SLOT(openAuthDB()));
+    connect(startButton, SIGNAL(clicked()), this, SLOT(startServer()));
 }
 
 void MainWindow::loadSettings()

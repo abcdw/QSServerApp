@@ -11,6 +11,7 @@
 #include <QPushButton>
 #include <QSqlDatabase>
 #include <QSqlError>
+#include "src/server.h"
 
 class MainWindow : public QMainWindow
 {
@@ -30,8 +31,10 @@ private:
     QLineEdit   *authDBLine;
     QLabel      *infoLabel;
     QGridLayout *loginWidgetLayout;
-    QPushButton *loginButton;
+    QPushButton *startButton;
     QPushButton *saveSettingsButton;
+
+    Server *server;
 
 public:
     MainWindow(QWidget *parent = 0);
@@ -39,7 +42,7 @@ public:
 
 public slots:
     void saveSettings();
-    void openAuthDB();
+    bool openAuthDB();
     void startServer();
 
 signals:
