@@ -23,6 +23,9 @@ private:
     QWidget     *loginWidget;
     QLineEdit   *loginLine;
     QLineEdit   *passwordLine;
+    QLineEdit   *authHostLine;
+    QLineEdit   *authPortLine;
+    QLineEdit   *authDBLine;
     QGridLayout *loginWidgetLayout;
     QPushButton *loginButton;
 
