@@ -10,6 +10,7 @@ void ClientThread::run()
 {
     qDebug() << socketDescriptor << " Starting thread";
     socket = new QTcpSocket();
+
     if ( !socket->setSocketDescriptor(this->socketDescriptor) ) {
         emit error(socket->error());
         return;
@@ -17,6 +18,7 @@ void ClientThread::run()
 
     connect(socket, SIGNAL(readyRead()), this, SLOT(readyRead()), Qt::DirectConnection);
     connect(socket, SIGNAL(disconnected()), this, SLOT(disconnected()), Qt::DirectConnection);
+
     qDebug() << socketDescriptor << " Client connected";
 
     exec();
@@ -31,6 +33,9 @@ void ClientThread::readyRead()
 void ClientThread::disconnected()
 {
     socket->deleteLater();
+    emit terminated(socketDescriptor);
+
     qDebug() << socketDescriptor << " Thread ended";
+
     exit(0);
 }

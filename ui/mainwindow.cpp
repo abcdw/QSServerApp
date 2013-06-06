@@ -38,6 +38,30 @@ void MainWindow::startServer()
         return;
     server = new Server();
     server->startServer();
+    hideLoginWidget();
+    initMainWidget();
+}
+
+void MainWindow::hideLoginWidget()
+{
+    setCentralWidget(0);
+}
+
+void MainWindow::initMainWidget()
+{
+    mainWidget    = new QWidget(this);
+    serverLogEdit = new QTextEdit(mainWidget);
+    userList      = new QTableView(mainWidget);
+    mainLayout    = new QGridLayout(mainWidget);
+//    QAbstractListModel *model = new QAbstractListModel();
+    userListModel = new UserListModel(mainWidget);
+
+    userList->setModel(userListModel);
+
+    mainLayout->addWidget(serverLogEdit, 0, 0);
+    mainLayout->addWidget(userList,      0, 1);
+
+    setCentralWidget(mainWidget);
 }
 
 void MainWindow::initLoginWidget()
@@ -104,5 +128,5 @@ void MainWindow::saveSettings()
 
 MainWindow::~MainWindow()
 {
-    
+
 }

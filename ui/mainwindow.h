@@ -11,7 +11,11 @@
 #include <QPushButton>
 #include <QSqlDatabase>
 #include <QSqlError>
+#include <QTextEdit>
+#include <QTableView>
+
 #include "src/server.h"
+#include "src/userlistmodel.h"
 
 class MainWindow : public QMainWindow
 {
@@ -21,7 +25,6 @@ private:
 
     void initLoginWidget();
     void loadSettings();
-
 
     QWidget     *loginWidget;
     QLineEdit   *loginLine;
@@ -35,6 +38,15 @@ private:
     QPushButton *saveSettingsButton;
 
     Server *server;
+
+    void hideLoginWidget();
+    void initMainWidget();
+
+    QWidget       *mainWidget;
+    QTextEdit     *serverLogEdit;
+    QTableView     *userList;
+    QGridLayout   *mainLayout;
+    UserListModel *userListModel;
 
 public:
     MainWindow(QWidget *parent = 0);

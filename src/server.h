@@ -3,7 +3,8 @@
 
 #include <QTcpServer>
 #include <QDebug>
-#include "clientthread.h"
+
+#include "src/clientthread.h"
 
 class Server : public QTcpServer
 {
@@ -19,10 +20,11 @@ protected:
 public:
     explicit Server(QObject *parent = 0);
     void startServer();
+
 signals:
     
 public slots:
-    
+    void clientDisconnected(int ID);
 };
 
 #endif // SERVER_H
