@@ -13,7 +13,11 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp \
-    ui/mainwindow.cpp
+    ui/mainwindow.cpp \
+    src/server.cpp \
+    src/clientthread.cpp
 
 HEADERS  += \
-    ui/mainwindow.h
+    ui/mainwindow.h \
+    src/server.h \
+    src/clientthread.h
