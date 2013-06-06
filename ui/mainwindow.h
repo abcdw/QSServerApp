@@ -10,6 +10,7 @@
 #include <QGridLayout>
 #include <QPushButton>
 #include <QSqlDatabase>
+#include <QSqlError>
 
 class MainWindow : public QMainWindow
 {

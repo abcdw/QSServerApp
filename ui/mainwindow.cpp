@@ -26,7 +26,7 @@ void MainWindow::openAuthDB()
         return;
     }
     else {
-        infoLabel->setText("Failed to connect!");
+        infoLabel->setText(authDB.lastError().text());
         emit authConnectionFailed();
         return;
     }
