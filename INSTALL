@@ -1,0 +1,5 @@
+
+create auth database:
+    cd tools/sql
+    edit db/create_auth.sql # set strongpassword to your password
+    mysql -u root -p < db/create_auth.sql
