@@ -2,16 +2,26 @@
 #define CLIENTTHREAD_H
 
 #include <QThread>
+#include <QTcpSocket>
+#include <QDebug>
 
 class ClientThread : public QThread
 {
     Q_OBJECT
+private:
+    QTcpSocket *socket;
+    int socketDescriptor;
+
 public:
-    explicit ClientThread(QObject *parent = 0);
-    
+    explicit ClientThread(int ID, QObject *parent = 0);
+    void run();
+
 signals:
+    void error(QTcpSocket::SocketError socketerror);
     
 public slots:
+    void readyRead();
+    void disconnected();
     
 };
 
