@@ -12,7 +12,8 @@ TARGET = QSServerApp
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-        mainwindow.cpp
+SOURCES += main.cpp \
+    ui/mainwindow.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += \
+    ui/mainwindow.h
