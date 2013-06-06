@@ -11,6 +11,32 @@ MainWindow::MainWindow(QWidget *parent)
     setCentralWidget(loginWidget);
 }
 
+void MainWindow::openAuthDB()
+{
+    QSqlDatabase authDB = QSqlDatabase::addDatabase("QMYSQL", "auth");
+    authDB.setHostName(authHostLine->text());
+    authDB.setDatabaseName(authDBLine->text());
+    authDB.setPort(authPortLine->text().toInt());
+    authDB.setUserName(loginLine->text());
+    authDB.setPassword(passwordLine->text());
+
+    if (authDB.open()) {
+        infoLabel->setText("Success!");
+        emit authSuccessfullOpened();
+        return;
+    }
+    else {
+        infoLabel->setText("Failed to connect!");
+        emit authConnectionFailed();
+        return;
+    }
+}
+
+void MainWindow::startServer()
+{
+
+}
+
 void MainWindow::initLoginWidget()
 {
     loginWidget        = new QWidget(this);
@@ -23,7 +49,7 @@ void MainWindow::initLoginWidget()
     loginButton        = new QPushButton("login", loginWidget);
     saveSettingsButton = new QPushButton("save" , loginWidget);
 
-    QLabel *infoLabel     = new QLabel("Fill infromation about authentication database"
+    infoLabel             = new QLabel("Fill infromation about authentication database"
                                                   , loginWidget);
     QLabel *loginLabel    = new QLabel("login:"   , loginWidget);
     QLabel *passwordLabel = new QLabel("pass:"    , loginWidget);
@@ -48,6 +74,7 @@ void MainWindow::initLoginWidget()
     loginWidgetLayout->addWidget(loginButton,        6, 1);
 
     connect(saveSettingsButton, SIGNAL(clicked()), this, SLOT(saveSettings()));
+    connect(loginButton, SIGNAL(clicked()), this, SLOT(openAuthDB()));
 }
 
 void MainWindow::loadSettings()
@@ -56,7 +83,7 @@ void MainWindow::loadSettings()
 
     loginLine->setText(   settings.value("auth/login", "auth").toString());
     passwordLine->setText(settings.value("auth/pass" , "strongpassword").toString());
-    authHostLine->setText(settings.value("auth/host" , "locahost").toString());
+    authHostLine->setText(settings.value("auth/host" , "localhost").toString());
     authPortLine->setText(settings.value("auth/port" , "3306").toString());
     authDBLine->setText(  settings.value("auth/db"   , "auth").toString());
 }

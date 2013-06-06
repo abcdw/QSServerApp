@@ -9,6 +9,7 @@
 #include <QLabel>
 #include <QGridLayout>
 #include <QPushButton>
+#include <QSqlDatabase>
 
 class MainWindow : public QMainWindow
 {
@@ -26,6 +27,7 @@ private:
     QLineEdit   *authHostLine;
     QLineEdit   *authPortLine;
     QLineEdit   *authDBLine;
+    QLabel      *infoLabel;
     QGridLayout *loginWidgetLayout;
     QPushButton *loginButton;
     QPushButton *saveSettingsButton;
@@ -33,8 +35,15 @@ private:
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
 public slots:
     void saveSettings();
+    void openAuthDB();
+    void startServer();
+
+signals:
+    void authConnectionFailed();
+    void authSuccessfullOpened();
 };
 
 #endif // MAINWINDOW_H
