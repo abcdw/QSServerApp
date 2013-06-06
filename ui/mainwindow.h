@@ -14,11 +14,11 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 private:
-    void loadSettings();
-    void saveSettings();
-    void initLoginWidget();
-
     QString confFileName;
+
+    void initLoginWidget();
+    void loadSettings();
+
 
     QWidget     *loginWidget;
     QLineEdit   *loginLine;
@@ -28,10 +28,13 @@ private:
     QLineEdit   *authDBLine;
     QGridLayout *loginWidgetLayout;
     QPushButton *loginButton;
+    QPushButton *saveSettingsButton;
 
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
+public slots:
+    void saveSettings();
 };
 
 #endif // MAINWINDOW_H

@@ -13,37 +13,41 @@ MainWindow::MainWindow(QWidget *parent)
 
 void MainWindow::initLoginWidget()
 {
-    loginWidget       = new QWidget(this);
-    loginWidgetLayout = new QGridLayout(loginWidget);
-    loginLine         = new QLineEdit(loginWidget);
-    passwordLine      = new QLineEdit(loginWidget);
-    authHostLine      = new QLineEdit(loginWidget);
-    authPortLine      = new QLineEdit(loginWidget);
-    authDBLine      = new QLineEdit(loginWidget);
-    loginButton       = new QPushButton("login", loginWidget);
+    loginWidget        = new QWidget(this);
+    loginWidgetLayout  = new QGridLayout(loginWidget);
+    loginLine          = new QLineEdit(loginWidget);
+    passwordLine       = new QLineEdit(loginWidget);
+    authHostLine       = new QLineEdit(loginWidget);
+    authPortLine       = new QLineEdit(loginWidget);
+    authDBLine         = new QLineEdit(loginWidget);
+    loginButton        = new QPushButton("login", loginWidget);
+    saveSettingsButton = new QPushButton("save" , loginWidget);
 
     QLabel *infoLabel     = new QLabel("Fill infromation about authentication database"
                                                   , loginWidget);
     QLabel *loginLabel    = new QLabel("login:"   , loginWidget);
     QLabel *passwordLabel = new QLabel("pass:"    , loginWidget);
-    QLabel *authHostLabel   = new QLabel("host:"    , loginWidget);
-    QLabel *authPortLabel   = new QLabel("port:"    , loginWidget);
+    QLabel *authHostLabel = new QLabel("host:"    , loginWidget);
+    QLabel *authPortLabel = new QLabel("port:"    , loginWidget);
     QLabel *authDBLabel   = new QLabel("database:", loginWidget);
 
     passwordLine->setEchoMode(QLineEdit::Password);
 
-    loginWidgetLayout->addWidget(infoLabel,     0, 0, 1, 2);
-    loginWidgetLayout->addWidget(loginLabel,    1, 0);
-    loginWidgetLayout->addWidget(passwordLabel, 2, 0);
-    loginWidgetLayout->addWidget(loginLine,     1, 1);
-    loginWidgetLayout->addWidget(passwordLine,  2, 1);
-    loginWidgetLayout->addWidget(authHostLabel, 3, 0);
-    loginWidgetLayout->addWidget(authHostLine,  3, 1);
-    loginWidgetLayout->addWidget(authPortLabel, 4, 0);
-    loginWidgetLayout->addWidget(authPortLine,  4, 1);
-    loginWidgetLayout->addWidget(authDBLabel, 5, 0);
-    loginWidgetLayout->addWidget(authDBLine,  5, 1);
-    loginWidgetLayout->addWidget(loginButton,   6, 0, 1, 2);
+    loginWidgetLayout->addWidget(infoLabel,          0, 0, 1, 2);
+    loginWidgetLayout->addWidget(loginLabel,         1, 0);
+    loginWidgetLayout->addWidget(passwordLabel,      2, 0);
+    loginWidgetLayout->addWidget(loginLine,          1, 1);
+    loginWidgetLayout->addWidget(passwordLine,       2, 1);
+    loginWidgetLayout->addWidget(authHostLabel,      3, 0);
+    loginWidgetLayout->addWidget(authHostLine,       3, 1);
+    loginWidgetLayout->addWidget(authPortLabel,      4, 0);
+    loginWidgetLayout->addWidget(authPortLine,       4, 1);
+    loginWidgetLayout->addWidget(authDBLabel,        5, 0);
+    loginWidgetLayout->addWidget(authDBLine,         5, 1);
+    loginWidgetLayout->addWidget(saveSettingsButton, 6, 0);
+    loginWidgetLayout->addWidget(loginButton,        6, 1);
+
+    connect(saveSettingsButton, SIGNAL(clicked()), this, SLOT(saveSettings()));
 }
 
 void MainWindow::loadSettings()
