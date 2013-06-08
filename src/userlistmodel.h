@@ -6,10 +6,14 @@
 #include <QDebug>
 #include <QBrush>
 #include <QFont>
+#include <QHostAddress>
 
 struct User
 {
+    User(int socketID_, const QString &name_, QHostAddress host_);
     int socketID;
+    QString name;
+    QHostAddress host;
 };
 
 class UserListModel : public QAbstractTableModel

@@ -53,7 +53,6 @@ void MainWindow::initMainWidget()
     serverLogEdit = new QTextEdit(mainWidget);
     userList      = new QTableView(mainWidget);
     mainLayout    = new QGridLayout(mainWidget);
-//    QAbstractListModel *model = new QAbstractListModel();
     userListModel = new UserListModel(mainWidget);
 
     userList->setModel(userListModel);
@@ -85,6 +84,7 @@ void MainWindow::initLoginWidget()
     QLabel *authDBLabel   = new QLabel("database:", loginWidget);
 
     passwordLine->setEchoMode(QLineEdit::Password);
+    infoLabel->setAlignment(Qt::AlignCenter);
 
     loginWidgetLayout->addWidget(infoLabel,          0, 0, 1, 2);
     loginWidgetLayout->addWidget(loginLabel,         1, 0);

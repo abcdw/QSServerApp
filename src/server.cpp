@@ -4,7 +4,6 @@ Server::Server(QObject *parent) :
     QTcpServer(parent)
 {
     host = QHostAddress::Any;
-    qDebug() << QHostAddress::Any;
     port = 1328;
 }
 
