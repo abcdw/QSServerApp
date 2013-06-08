@@ -13,6 +13,8 @@
 #include <QSqlError>
 #include <QTextEdit>
 #include <QTableView>
+#include <QTimer>
+#include <QSignalMapper>
 
 #include "src/server.h"
 #include "src/userlistmodel.h"
@@ -39,16 +41,16 @@ private:
 
     Server *server;
 
-    void hideLoginWidget();
     void initMainWidget();
 
     QWidget       *mainWidget;
     QTextEdit     *serverLogEdit;
-    QTableView     *userList;
+    QTableView    *userList;
     QGridLayout   *mainLayout;
     UserListModel *userListModel;
 
 public:
+    void outputMessage(QtMsgType type, const QString &msg);
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
 

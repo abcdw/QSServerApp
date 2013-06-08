@@ -11,6 +11,7 @@ class Server : public QTcpServer
     Q_OBJECT
 
 private:
+
     QHostAddress host;
     int          port;
 

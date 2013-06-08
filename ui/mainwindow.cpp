@@ -36,15 +36,12 @@ void MainWindow::startServer()
 {
     if (!openAuthDB())
         return;
+
+    initMainWidget();
+
+    setCentralWidget(mainWidget);
     server = new Server();
     server->startServer();
-    hideLoginWidget();
-    initMainWidget();
-}
-
-void MainWindow::hideLoginWidget()
-{
-    setCentralWidget(0);
 }
 
 void MainWindow::initMainWidget()
@@ -59,8 +56,6 @@ void MainWindow::initMainWidget()
 
     mainLayout->addWidget(serverLogEdit, 0, 0);
     mainLayout->addWidget(userList,      0, 1);
-
-    setCentralWidget(mainWidget);
 }
 
 void MainWindow::initLoginWidget()
@@ -124,6 +119,41 @@ void MainWindow::saveSettings()
     settings.setValue("auth/host" , authHostLine->text());
     settings.setValue("auth/port" , authPortLine->text());
     settings.setValue("auth/db"   , authDBLine->text());
+}
+
+void MainWindow::outputMessage(QtMsgType type, const QString &msg)
+{
+
+    switch (type) {
+    case QtDebugMsg:
+        if (serverLogEdit) {
+            QSignalMapper *sm = new QSignalMapper(this);
+            QTimer *tm = new QTimer();
+
+            tm->setSingleShot(true);
+            tm->setInterval(0);
+
+            sm->setMapping(tm, QString(msg));
+
+            connect(tm, SIGNAL(timeout()), sm, SLOT(map()));
+            connect(sm, SIGNAL(mapped(QString)), serverLogEdit, SLOT(append(QString)));
+
+            tm->start();
+        }
+        else {
+            fprintf(stderr, "Debug: %s\n", msg.toAscii().data());
+        }
+        break;
+    case QtWarningMsg:
+        fprintf(stderr, "Warning: %s\n", msg.toAscii().data());
+        break;
+    case QtCriticalMsg:
+        fprintf(stderr, "Critical: %s\n", msg.toAscii().data());
+        break;
+    case QtFatalMsg:
+        fprintf(stderr, "Fatal: %s\n", msg.toAscii().data());
+        abort();
+    }
 }
 
 MainWindow::~MainWindow()

@@ -3,7 +3,7 @@
 ClientThread::ClientThread(int ID, QObject *parent) :
     QThread(parent)
 {
-    this->socketDescriptor = ID;
+    socketDescriptor = ID;
 }
 
 void ClientThread::run()
@@ -16,12 +16,25 @@ void ClientThread::run()
         return;
     }
 
+    qDebug() << socketDescriptor << " Waiting for authentication";
+
     connect(socket, SIGNAL(readyRead()), this, SLOT(readyRead()), Qt::DirectConnection);
     connect(socket, SIGNAL(disconnected()), this, SLOT(disconnected()), Qt::DirectConnection);
 
     qDebug() << socketDescriptor << " Client connected";
 
     exec();
+}
+
+bool ClientThread::authenticateClient()
+{
+    socket->waitForReadyRead();
+    QByteArray user = socket->readAll();
+    socket->waitForReadyRead();
+    QByteArray pass = socket->readAll();
+
+    qDebug() << "user: [" << user << "]";
+    qDebug() << "pass: [" << pass << "]";
 }
 
 void ClientThread::readyRead()

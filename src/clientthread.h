@@ -9,9 +9,10 @@ class ClientThread : public QThread
 {
     Q_OBJECT
 private:
-    QTcpSocket *socket;
-    int socketDescriptor;
+    QTcpSocket        *socket;
 
+    int socketDescriptor;
+    bool authenticateClient();
 public:
     explicit ClientThread(int ID, QObject *parent = 0);
     void run();

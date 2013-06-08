@@ -1,8 +1,9 @@
 #include "server.h"
 
-Server::Server(QObject *parent) :
-    QTcpServer(parent)
+Server::Server(QObject *parent)
+    : QTcpServer(parent)
 {
+
     host = QHostAddress::Any;
     port = 1328;
 }
@@ -19,7 +20,7 @@ void Server::startServer()
 
 void Server::clientDisconnected(int ID)
 {
-    qDebug() << "message from server: client disconnected" << ID;
+    //qDebug() << "message from server: client disconnected" << ID;
 }
 
 void Server::incomingConnection(int handle)
