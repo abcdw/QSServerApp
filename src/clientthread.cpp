@@ -18,6 +18,10 @@ void ClientThread::run()
 
     qDebug() << socketDescriptor << " Waiting for authentication";
 
+    user = new User(socketDescriptor, "bob", QHostAddress::LocalHost);
+
+    emit clientAuthenticated(user);
+
     connect(socket, SIGNAL(readyRead()), this, SLOT(readyRead()), Qt::DirectConnection);
     connect(socket, SIGNAL(disconnected()), this, SLOT(disconnected()), Qt::DirectConnection);
 
@@ -45,10 +49,11 @@ void ClientThread::readyRead()
 
 void ClientThread::disconnected()
 {
-    socket->deleteLater();
-    emit terminated(socketDescriptor);
-
     qDebug() << socketDescriptor << " Thread ended";
+
+    socket->deleteLater();
+    emit clientDisconnected(user);
+    emit terminated(socketDescriptor);
 
     exit(0);
 }

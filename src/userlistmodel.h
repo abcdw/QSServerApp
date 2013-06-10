@@ -14,6 +14,7 @@ struct User
     int socketID;
     QString name;
     QHostAddress host;
+    bool operator==(const User &user_) const;
 };
 
 class UserListModel : public QAbstractTableModel
@@ -33,7 +34,8 @@ public:
 signals:
     
 public slots:
-
+    void addUser(User *user_);
+    void delUser(User *user_);
 };
 
 #endif // USERLISTMODEL_H

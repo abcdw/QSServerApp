@@ -3,16 +3,30 @@
 UserListModel::UserListModel(QObject *parent)
     : QAbstractTableModel(parent)
 {
-    User u(341, "qwe", QHostAddress("10.205.15.63"));
-    User u1(74, "profi", QHostAddress("10.205.15.74"));
 
-    users << u << u1;
 }
 
 User::User(int socketID_, const QString &name_, QHostAddress host_)
     : socketID(socketID_), name(name_), host(host_)
 {
 
+}
+
+bool User::operator==(const User &user_) const
+{
+    return socketID == user_.socketID;
+}
+
+void UserListModel::addUser(User *user_)
+{
+    users << User(*user_);
+    emit layoutChanged();
+}
+
+void UserListModel::delUser(User *user_)
+{
+    users.removeOne(User(*user_));
+    emit layoutChanged();
 }
 
 QVariant UserListModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -59,27 +73,27 @@ QVariant UserListModel::data(const QModelIndex &index, int role) const
         }
         break;
     case Qt::FontRole:
-        if (row == 0 && col == 0) //change font only for cell(0,0)
-        {
-            QFont boldFont;
-            boldFont.setBold(true);
-        //    return boldFont;
-        }
+//        if (row == 0 && col == 0) //change font only for cell(0,0)
+//        {
+//            QFont boldFont;
+//            boldFont.setBold(true);
+//        //    return boldFont;
+//        }
         break;
     case Qt::BackgroundRole:
 
-        if (row == 1 && col == 2)  //change background only for cell(1,2)
-        {
-            QBrush redBackground(Qt::red);
-        //    return redBackground;
-        }
+//        if (row == 1 && col == 2)  //change background only for cell(1,2)
+//        {
+//            QBrush redBackground(Qt::red);
+//        //    return redBackground;
+//        }
         break;
     case Qt::TextAlignmentRole:
 
-        if (row == 1 && col == 1) //change text alignment only for cell(1,1)
-        {
-        //    return Qt::AlignRight + Qt::AlignVCenter;
-        }
+//        if (row == 1 && col == 1) //change text alignment only for cell(1,1)
+//        {
+//        //    return Qt::AlignRight + Qt::AlignVCenter;
+//        }
         break;
     case Qt::CheckStateRole:
 

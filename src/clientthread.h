@@ -5,13 +5,16 @@
 #include <QTcpSocket>
 #include <QDebug>
 
+#include "src/userlistmodel.h"
+
 class ClientThread : public QThread
 {
     Q_OBJECT
 private:
-    QTcpSocket        *socket;
+    QTcpSocket *socket;
+    User       *user;
 
-    int socketDescriptor;
+    int  socketDescriptor;
     bool authenticateClient();
 public:
     explicit ClientThread(int ID, QObject *parent = 0);
@@ -20,6 +23,8 @@ public:
 signals:
     void error(QTcpSocket::SocketError socketerror);
     void terminated(int ID);
+    void clientAuthenticated(User *user_);
+    void clientDisconnected(User  *user_);
 
 public slots:
     void readyRead();

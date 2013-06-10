@@ -41,6 +41,9 @@ void MainWindow::startServer()
 
     setCentralWidget(mainWidget);
     server = new Server();
+
+    connect(server, SIGNAL(clientAuthenticated(User *)), userListModel, SLOT(addUser(User *)));
+    connect(server, SIGNAL(clientDisconnected(User*)), userListModel, SLOT(delUser(User *)));
     server->startServer();
 }
 

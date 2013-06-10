@@ -5,6 +5,7 @@
 #include <QDebug>
 
 #include "src/clientthread.h"
+#include "src/userlistmodel.h"
 
 class Server : public QTcpServer
 {
@@ -23,9 +24,12 @@ public:
     void startServer();
 
 signals:
-    
+    void clientAuthenticated(User *user_);
+    void clientDisconnected(User  *user_);
+
 public slots:
-    void clientDisconnected(int ID);
+    void clientTerminated(int ID);
+
 };
 
 #endif // SERVER_H
