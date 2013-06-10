@@ -26,6 +26,8 @@ QString User::getUserAccess()
         return "moder";
     case 2:
         return "admin";
+    case 3:
+        return "super";
     }
     return "unknown";
 }

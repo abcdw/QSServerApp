@@ -65,11 +65,28 @@ bool ClientThread::authenticateClient()
         return 0;
     query.next();
 
+    QString realPass = query.value(1).toString();
+    int     userID   = query.value(0).toInt();
+
+    query.prepare("SELECT access_level FROM account_access WHERE id = :id");
+    query.bindValue(":id", userID);
+    query.exec();
+
+    if (query.size() == 0) {
+        user->accessLevel = 0;
+    }
+    else {
+        query.next();
+        qDebug() << query.value(0);
+        int accessLevel = query.value(0).toInt();
+        user->accessLevel = accessLevel;
+    }
+
 //    qDebug() << "query: " << query.value(0).toString() << " " << query.value(1).toString();
 //    qDebug() << "user: [" << login << "]";
 //    qDebug() << "pass: [" << encryptedPass << ", " << pass << "]";
 
-    return query.value(1).toString() == encryptedPass;
+    return realPass == encryptedPass;
 
     return 1;
 }
