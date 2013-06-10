@@ -56,7 +56,11 @@ void MainWindow::initMainWidget()
     userListModel = new UserListModel(mainWidget);
 
     userList->setModel(userListModel);
-
+    userList->setFixedWidth(300);
+    userList->setColumnWidth(0, 30);
+    userList->setColumnWidth(1, 140);
+    userList->setColumnWidth(2, 70);
+    userList->setColumnWidth(3, 50);
     mainLayout->addWidget(serverLogEdit, 0, 0);
     mainLayout->addWidget(userList,      0, 1);
 }

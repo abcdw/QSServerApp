@@ -9,7 +9,7 @@ UserListModel::UserListModel(QObject *parent)
 User::User(int socketID_, const QString &name_, QHostAddress host_)
     : socketID(socketID_), name(name_), host(host_)
 {
-
+    accessLevel = 0;
 }
 
 bool User::operator==(const User &user_) const
@@ -17,15 +17,28 @@ bool User::operator==(const User &user_) const
     return socketID == user_.socketID;
 }
 
+QString User::getUserAccess()
+{
+    switch (accessLevel) {
+    case 0:
+        return "user";
+    case 1:
+        return "moder";
+    case 2:
+        return "admin";
+    }
+    return "unknown";
+}
+
 void UserListModel::addUser(User *user_)
 {
-    users << User(*user_);
+    users << user_;
     emit layoutChanged();
 }
 
 void UserListModel::delUser(User *user_)
 {
-    users.removeOne(User(*user_));
+    users.removeOne(user_);
     emit layoutChanged();
 }
 
@@ -37,9 +50,11 @@ QVariant UserListModel::headerData(int section, Qt::Orientation orientation, int
             case 0:
                 return QString("id");
             case 1:
-                return QString("name");
+                return QString("username");
             case 2:
                 return QString("host");
+            case 3:
+                return QString("access\nlevel");
             }
         }
     }
@@ -53,7 +68,7 @@ int UserListModel::rowCount(const QModelIndex & /* parent */) const
 
 int UserListModel::columnCount(const QModelIndex & /* parent */) const
 {
-    return 3;
+    return 4;
 }
 
 QVariant UserListModel::data(const QModelIndex &index, int role) const
@@ -65,11 +80,13 @@ QVariant UserListModel::data(const QModelIndex &index, int role) const
     case Qt::DisplayRole:
         switch(col) {
         case 0:
-            return users[row].socketID;
+            return users[row]->socketID;
         case 1:
-            return users[row].name;
+            return users[row]->name;
         case 2:
-            return users[row].host.toString();
+            return users[row]->host.toString();
+        case 3:
+            return users[row]->getUserAccess();
         }
         break;
     case Qt::FontRole:
@@ -89,7 +106,7 @@ QVariant UserListModel::data(const QModelIndex &index, int role) const
 //        }
         break;
     case Qt::TextAlignmentRole:
-
+        return Qt::AlignCenter;
 //        if (row == 1 && col == 1) //change text alignment only for cell(1,1)
 //        {
 //        //    return Qt::AlignRight + Qt::AlignVCenter;

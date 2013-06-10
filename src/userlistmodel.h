@@ -11,9 +11,12 @@
 struct User
 {
     User(int socketID_, const QString &name_, QHostAddress host_);
-    int socketID;
-    QString name;
+    int          socketID;
+    QString      name;
     QHostAddress host;
+    int          accessLevel;
+
+    QString getUserAccess();
     bool operator==(const User &user_) const;
 };
 
@@ -21,7 +24,7 @@ class UserListModel : public QAbstractTableModel
 {
     Q_OBJECT
 private:
-    QList<User> users;
+    QList<User *> users;
 
 public:
     explicit UserListModel(QObject *parent = 0);
