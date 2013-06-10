@@ -29,15 +29,23 @@ private:
     void loadSettings();
 
     QWidget     *loginWidget;
-    QLineEdit   *loginLine;
-    QLineEdit   *passwordLine;
+    QLineEdit   *authLoginLine;
+    QLineEdit   *authPasswordLine;
     QLineEdit   *authHostLine;
     QLineEdit   *authPortLine;
     QLineEdit   *authDBLine;
+
+    QLineEdit   *mainLoginLine;
+    QLineEdit   *mainPasswordLine;
+    QLineEdit   *mainHostLine;
+    QLineEdit   *mainPortLine;
+    QLineEdit   *mainDBLine;
+
     QLabel      *infoLabel;
     QGridLayout *loginWidgetLayout;
     QPushButton *startButton;
     QPushButton *saveSettingsButton;
+    QPushButton *exitButton;
 
     Server *server;
 
@@ -57,6 +65,7 @@ public:
 public slots:
     void saveSettings();
     bool openAuthDB();
+    bool openMainDB();
     void startServer();
 
 signals:

@@ -77,7 +77,6 @@ bool ClientThread::authenticateClient()
     }
     else {
         query.next();
-        qDebug() << query.value(0);
         int accessLevel = query.value(0).toInt();
         user->accessLevel = accessLevel;
     }

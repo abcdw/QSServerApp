@@ -17,24 +17,39 @@ bool MainWindow::openAuthDB()
     authDB.setHostName(authHostLine->text());
     authDB.setDatabaseName(authDBLine->text());
     authDB.setPort(authPortLine->text().toInt());
-    authDB.setUserName(loginLine->text());
-    authDB.setPassword(passwordLine->text());
+    authDB.setUserName(authLoginLine->text());
+    authDB.setPassword(authPasswordLine->text());
 
     if (authDB.open()) {
-        infoLabel->setText("Success!");
-        emit authSuccessfullOpened();
         return true;
     }
     else {
         infoLabel->setText(authDB.lastError().text());
-        emit authConnectionFailed();
+        return false;
+    }
+}
+
+bool MainWindow::openMainDB()
+{
+    QSqlDatabase mainDB = QSqlDatabase::addDatabase("QMYSQL", "main");
+    mainDB.setHostName(mainHostLine->text());
+    mainDB.setDatabaseName(mainDBLine->text());
+    mainDB.setPort(mainPortLine->text().toInt());
+    mainDB.setUserName(mainLoginLine->text());
+    mainDB.setPassword(mainPasswordLine->text());
+
+    if (mainDB.open()) {
+        return true;
+    }
+    else {
+        infoLabel->setText(mainDB.lastError().text());
         return false;
     }
 }
 
 void MainWindow::startServer()
 {
-    if (!openAuthDB())
+    if (!openAuthDB() || !openMainDB())
         return;
 
     initMainWidget();
@@ -69,15 +84,22 @@ void MainWindow::initLoginWidget()
 {
     loginWidget        = new QWidget(this);
     loginWidgetLayout  = new QGridLayout(loginWidget);
-    loginLine          = new QLineEdit(loginWidget);
-    passwordLine       = new QLineEdit(loginWidget);
+    authLoginLine          = new QLineEdit(loginWidget);
+    authPasswordLine       = new QLineEdit(loginWidget);
     authHostLine       = new QLineEdit(loginWidget);
     authPortLine       = new QLineEdit(loginWidget);
     authDBLine         = new QLineEdit(loginWidget);
+    mainLoginLine      = new QLineEdit(loginWidget);
+    mainPasswordLine   = new QLineEdit(loginWidget);
+    mainHostLine       = new QLineEdit(loginWidget);
+    mainPortLine       = new QLineEdit(loginWidget);
+    mainDBLine         = new QLineEdit(loginWidget);
+
     startButton        = new QPushButton("start server", loginWidget);
     saveSettingsButton = new QPushButton("save"        , loginWidget);
+    exitButton         = new QPushButton("exit"        , loginWidget);
 
-    infoLabel             = new QLabel("Fill infromation about authentication database"
+    infoLabel             = new QLabel("Fill infromation about authentication database and main database"
                                                   , loginWidget);
     QLabel *loginLabel    = new QLabel("login:"   , loginWidget);
     QLabel *passwordLabel = new QLabel("pass:"    , loginWidget);
@@ -85,48 +107,69 @@ void MainWindow::initLoginWidget()
     QLabel *authPortLabel = new QLabel("port:"    , loginWidget);
     QLabel *authDBLabel   = new QLabel("database:", loginWidget);
 
-    passwordLine->setEchoMode(QLineEdit::Password);
+    authPasswordLine->setEchoMode(QLineEdit::Password);
+    mainPasswordLine->setEchoMode(QLineEdit::Password);
     infoLabel->setAlignment(Qt::AlignCenter);
 
-    loginWidgetLayout->addWidget(infoLabel,          0, 0, 1, 2);
+    loginWidgetLayout->addWidget(infoLabel,          0, 0, 1, 3);
     loginWidgetLayout->addWidget(loginLabel,         1, 0);
     loginWidgetLayout->addWidget(passwordLabel,      2, 0);
-    loginWidgetLayout->addWidget(loginLine,          1, 1);
-    loginWidgetLayout->addWidget(passwordLine,       2, 1);
+    loginWidgetLayout->addWidget(authLoginLine,          1, 1);
+    loginWidgetLayout->addWidget(authPasswordLine,       2, 1);
     loginWidgetLayout->addWidget(authHostLabel,      3, 0);
     loginWidgetLayout->addWidget(authHostLine,       3, 1);
     loginWidgetLayout->addWidget(authPortLabel,      4, 0);
     loginWidgetLayout->addWidget(authPortLine,       4, 1);
     loginWidgetLayout->addWidget(authDBLabel,        5, 0);
     loginWidgetLayout->addWidget(authDBLine,         5, 1);
+
+    loginWidgetLayout->addWidget(mainLoginLine,      1, 2);
+    loginWidgetLayout->addWidget(mainPasswordLine,   2, 2);
+    loginWidgetLayout->addWidget(mainHostLine,       3, 2);
+    loginWidgetLayout->addWidget(mainPortLine,       4, 2);
+    loginWidgetLayout->addWidget(mainDBLine,         5, 2);
+
     loginWidgetLayout->addWidget(saveSettingsButton, 6, 0);
     loginWidgetLayout->addWidget(startButton,        6, 1);
+    loginWidgetLayout->addWidget(exitButton,         6, 2);
 
     connect(saveSettingsButton, SIGNAL(clicked()), this, SLOT(saveSettings()));
     connect(startButton, SIGNAL(clicked()), this, SLOT(startServer()));
-    QTimer::singleShot(1, startButton, SLOT(click()));
+    connect(exitButton, SIGNAL(clicked()), this, SLOT(close()));
 }
 
 void MainWindow::loadSettings()
 {
     QSettings settings(confFileName, QSettings::IniFormat);
 
-    loginLine->setText(   settings.value("auth/login", "auth").toString());
-    passwordLine->setText(settings.value("auth/pass" , "strongpassword").toString());
-    authHostLine->setText(settings.value("auth/host" , "localhost").toString());
-    authPortLine->setText(settings.value("auth/port" , "3306").toString());
-    authDBLine->setText(  settings.value("auth/db"   , "auth").toString());
+    authLoginLine->setText(   settings.value("auth/login", "auth").toString());
+    authPasswordLine->setText(settings.value("auth/pass" , "strongpassword").toString());
+    authHostLine->setText(settings.value(    "auth/host" , "localhost").toString());
+    authPortLine->setText(settings.value(    "auth/port" , "3306").toString());
+    authDBLine->setText(  settings.value(    "auth/db"   , "auth").toString());
+
+    mainLoginLine->setText(   settings.value("main/login", "admin").toString());
+    mainPasswordLine->setText(settings.value("main/pass" , "strongpassword").toString());
+    mainHostLine->setText(settings.value(    "main/host" , "localhost").toString());
+    mainPortLine->setText(settings.value(    "main/port" , "3306").toString());
+    mainDBLine->setText(  settings.value(    "main/db"   , "main").toString());
 }
 
 void MainWindow::saveSettings()
 {
     QSettings settings(confFileName, QSettings::IniFormat);
 
-    settings.setValue("auth/login", loginLine->text());
-    settings.setValue("auth/pass" , passwordLine->text());
+    settings.setValue("auth/login", authLoginLine->text());
+    settings.setValue("auth/pass" , authPasswordLine->text());
     settings.setValue("auth/host" , authHostLine->text());
     settings.setValue("auth/port" , authPortLine->text());
     settings.setValue("auth/db"   , authDBLine->text());
+
+    settings.setValue("main/login", mainLoginLine->text());
+    settings.setValue("main/pass" , mainPasswordLine->text());
+    settings.setValue("main/host" , mainHostLine->text());
+    settings.setValue("main/port" , mainPortLine->text());
+    settings.setValue("main/db"   , mainDBLine->text());
 }
 
 void MainWindow::outputMessage(QtMsgType type, const QString &msg)
