@@ -4,6 +4,10 @@
 #include <QThread>
 #include <QTcpSocket>
 #include <QDebug>
+#include <QTimer>
+#include <QCryptographicHash>
+#include <QSqlDatabase>
+#include <QSqlQuery>
 
 #include "src/userlistmodel.h"
 
@@ -22,14 +26,13 @@ public:
 
 signals:
     void error(QTcpSocket::SocketError socketerror);
-    void terminated(int ID);
     void clientAuthenticated(User *user_);
     void clientDisconnected(User  *user_);
 
 public slots:
     void readyRead();
     void disconnected();
-    
+
 };
 
 #endif // CLIENTTHREAD_H

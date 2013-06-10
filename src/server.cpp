@@ -18,11 +18,6 @@ void Server::startServer()
     }
 }
 
-void Server::clientTerminated(int ID)
-{
-    qDebug() << ID << " Client disconnected";
-}
-
 void Server::incomingConnection(int handle)
 {
     qDebug() << handle << " Connecting...";
@@ -31,7 +26,6 @@ void Server::incomingConnection(int handle)
     //connect(thread, SIGNAL()), this, SLOT()
     connect(thread, SIGNAL(clientAuthenticated(User *)), this, SIGNAL(clientAuthenticated(User*)));
     connect(thread, SIGNAL(clientDisconnected(User*)), this, SIGNAL(clientDisconnected(User*)));
-    connect(thread, SIGNAL(terminated(int)), this, SLOT(clientTerminated(int)));
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
     thread->start();
 }

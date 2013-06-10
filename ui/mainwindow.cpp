@@ -100,6 +100,7 @@ void MainWindow::initLoginWidget()
 
     connect(saveSettingsButton, SIGNAL(clicked()), this, SLOT(saveSettings()));
     connect(startButton, SIGNAL(clicked()), this, SLOT(startServer()));
+    QTimer::singleShot(1, startButton, SLOT(click()));
 }
 
 void MainWindow::loadSettings()

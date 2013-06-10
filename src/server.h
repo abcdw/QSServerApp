@@ -28,7 +28,6 @@ signals:
     void clientDisconnected(User  *user_);
 
 public slots:
-    void clientTerminated(int ID);
 
 };
 
