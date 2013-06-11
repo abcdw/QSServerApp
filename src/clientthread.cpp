@@ -45,11 +45,17 @@ bool ClientThread::authenticateClient()
     QByteArray authData = socket->readAll();
     QString authString(authData);
     QStringList authStrs = authString.split(":");
-    if (authStrs.count() < 2)
+    if (authStrs.count() < 2) {
+        qDebug() << socketDescriptor << "Authentication string must be user:pass";
         return 0;
+    }
+
     QString login(authStrs[0].simplified());
     QString pass(authStrs[1].simplified());
     QString encryptedPass = QString(QCryptographicHash::hash((pass.toAscii()), QCryptographicHash::Md5).toHex());
+
+    qDebug() << socketDescriptor << " User: [" << login << "]";
+    qDebug() << socketDescriptor << " Pass: [" << encryptedPass << "]";
 
     user->name = login;
     user->host = socket->peerAddress();
@@ -61,11 +67,15 @@ bool ClientThread::authenticateClient()
     query.bindValue(":login", login);
     query.exec();
 
-    if (query.size() < 1)
-        return 0;
+    if (query.size() < 1) {
+        qDebug() << socketDescriptor << " User not found!";
+        return 0;    
+    }
+
     query.next();
 
     QString realPass = query.value(1).toString();
+
     int     userID   = query.value(0).toInt();
 
     query.prepare("SELECT access_level FROM account_access WHERE id = :id");
@@ -82,12 +92,9 @@ bool ClientThread::authenticateClient()
     }
 
 //    qDebug() << "query: " << query.value(0).toString() << " " << query.value(1).toString();
-//    qDebug() << "user: [" << login << "]";
-//    qDebug() << "pass: [" << encryptedPass << ", " << pass << "]";
-
+    if (realPass != encryptedPass)
+        qDebug() << socketDescriptor << " Wrong password!";
     return realPass == encryptedPass;
-
-    return 1;
 }
 
 void ClientThread::readyRead()
