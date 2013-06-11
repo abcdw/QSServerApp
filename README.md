@@ -9,14 +9,12 @@ $ git clone https://github.com/abcdw/QSServerApp.git
 $ cd QSServerApp # project root
 ```
 
+First command from any section below runs from project root
+
 update project:
 ```
-$ cd QSServerApp # project root
 $ git pull
 ```
-
-
-First command from any section below runs from project root
 
 build:
 ```
