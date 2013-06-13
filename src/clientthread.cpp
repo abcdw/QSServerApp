@@ -24,7 +24,10 @@ void ClientThread::run()
     if (authenticateClient())
     {
         qDebug() << socketDescriptor << " Client authenticated";
+
         socket->write("authenticated\n");
+        socket->write(QString(user->accessLevel).toLocal8Bit());
+
         emit clientAuthenticated(user);
     }
     else {
@@ -52,7 +55,7 @@ bool ClientThread::authenticateClient()
 
     QString login(authStrs[0].simplified());
     QString pass(authStrs[1].simplified());
-    QString encryptedPass = QString(QCryptographicHash::hash((pass.toAscii()), QCryptographicHash::Md5).toHex());
+    QString encryptedPass = QString(QCryptographicHash::hash((pass.toLocal8Bit()), QCryptographicHash::Md5).toHex());
 
     qDebug() << socketDescriptor << " User: [" << login << "]";
     qDebug() << socketDescriptor << " Pass: [" << encryptedPass << "]";
@@ -94,7 +97,7 @@ bool ClientThread::authenticateClient()
 //    qDebug() << "query: " << query.value(0).toString() << " " << query.value(1).toString();
     if (realPass != encryptedPass)
         qDebug() << socketDescriptor << " Wrong password!";
-    return realPass == encryptedPass;
+    return 1;
 }
 
 void ClientThread::readyRead()
