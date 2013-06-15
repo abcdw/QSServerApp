@@ -192,17 +192,17 @@ void MainWindow::outputMessage(QtMsgType type, const QString &msg)
             tm->start();
         }
         else {
-            fprintf(stderr, "Debug: %s\n", msg.toAscii().data());
+            fprintf(stderr, "Debug: %s\n", msg.toLocal8Bit().data());
         }
         break;
     case QtWarningMsg:
-        fprintf(stderr, "Warning: %s\n", msg.toAscii().data());
+        fprintf(stderr, "Warning: %s\n", msg.toLocal8Bit().data());
         break;
     case QtCriticalMsg:
-        fprintf(stderr, "Critical: %s\n", msg.toAscii().data());
+        fprintf(stderr, "Critical: %s\n", msg.toLocal8Bit().data());
         break;
     case QtFatalMsg:
-        fprintf(stderr, "Fatal: %s\n", msg.toAscii().data());
+        fprintf(stderr, "Fatal: %s\n", msg.toLocal8Bit().data());
         abort();
     }
 }

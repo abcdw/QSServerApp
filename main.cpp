@@ -4,7 +4,7 @@
 
 QPointer<MainWindow> w;
 
-void MessageOutput(QtMsgType type, const char *msg)
+void MessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
     if(w)
         w->outputMessage( type, msg );
@@ -14,8 +14,8 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     w = new MainWindow();
-    qInstallMsgHandler(MessageOutput);
+    qInstallMessageHandler(MessageOutput);
     w->show();
-    w->resize(800, 300);
+
     return a.exec();
 }
